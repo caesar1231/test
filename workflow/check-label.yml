@@ -1,0 +1,28 @@
+name: Require Label on Pull Request
+
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled, synchronize]
+
+jobs:
+  check-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for required label
+        env:
+          REQUIRED_LABEL: "ready-for-review"
+        run: |
+          #!/bin/bash
+          set -e
+
+          # Get all labels from the pull request
+          LABELS=$(jq -r '.pull_request.labels[].name' "$GITHUB_EVENT_PATH")
+
+          # Check if the required label is present
+          if echo "$LABELS" | grep -q "^$REQUIRED_LABEL$"; then
+            echo "Required label '$REQUIRED_LABEL' is present."
+            exit 0
+          else
+            echo "Error: Required label '$REQUIRED_LABEL' is missing."
+            exit 1
+          fi
