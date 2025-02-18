@@ -18,7 +18,7 @@ jobs:
         id: check-merge
         run: |
           LAST_COMMIT_MSG=$(git log -1 --pretty=%B)
-          if [[ $LAST_COMMIT_MSG == *"Merge branch * develop"* ]]; then
+          if [[ $LAST_COMMIT_MSG == *"Merge pull request * develop"* ]]; then
             echo "IS_DEVELOP_MERGE=true" >> $GITHUB_OUTPUT
           else
             echo "IS_DEVELOP_MERGE=false" >> $GITHUB_OUTPUT
