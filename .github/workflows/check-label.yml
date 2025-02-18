@@ -19,7 +19,7 @@ jobs:
           LABELS=$(jq -r '.pull_request.labels[].name' "$GITHUB_EVENT_PATH")
 
           # Check if the required label is present
-          if echo "$LABELS" | grep -q "^$REQUIRED_LABEL$"; then
+          if echo "$LABELS" | grep -q "${{ vars.REQUIRED_LABEL }}$"; then
             echo "Required label '${{ vars.REQUIRED_LABEL }}' is present."
             exit 0
           else
