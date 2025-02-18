@@ -10,12 +10,6 @@ jobs:
   check-label:
     runs-on: ubuntu-latest
     steps:
-      - name: Get develop branch label
-        run: |
-          DEVELOP_LABEL=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/labels" | \
-            jq -r '.[] | select(.name | startswith("develop-")) | .name')
-          echo "REQUIRED_LABEL=$DEVELOP_LABEL" >> $GITHUB_ENV
       - name: Check for required label
         run: |
           #!/bin/bash
