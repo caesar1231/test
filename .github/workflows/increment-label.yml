@@ -1,0 +1,53 @@
+name: Update Environment Variable on Main Branch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-env-var:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check if merge is from develop
+        id: check-merge
+        run: |
+          LAST_COMMIT_MSG=$(git log -1 --pretty=%B)
+          if [[ $LAST_COMMIT_MSG == *"Merge branch 'develop'"* ]]; then
+            echo "IS_DEVELOP_MERGE=true" >> $GITHUB_OUTPUT
+          else
+            echo "IS_DEVELOP_MERGE=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update environment variable
+        if: steps.check-merge.outputs.IS_DEVELOP_MERGE == 'true'
+        run: |
+          # Get the current REQUIRED_LABEL value
+          CURRENT_VALUE=${{ vars.REQUIRED_LABEL }}
+
+          # Extract the number after 'R'
+          CURRENT_NUMBER=${CURRENT_VALUE#R}
+
+          # Increment the number
+          NEW_NUMBER=$((CURRENT_NUMBER + 1))
+
+          # Reset to 1 if it reaches 26
+          if [ $NEW_NUMBER -gt 25 ]; then
+            NEW_NUMBER=1
+          fi
+
+          # Create the new value
+          NEW_VALUE="R$NEW_NUMBER"
+
+          # Update the REQUIRED_LABEL variable
+          curl -X PATCH -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d "{\"name\":\"REQUIRED_LABEL\",\"value\":\"$NEW_VALUE\"}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/variables/REQUIRED_LABEL"
+
+          echo "Environment variable REQUIRED_LABEL updated to $NEW_VALUE"

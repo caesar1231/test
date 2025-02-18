@@ -3,14 +3,20 @@ name: Require Label on Pull Request
 on:
   pull_request:
     types: [opened, labeled, unlabeled, synchronize]
+    branches:
+      - develop
 
 jobs:
   check-label:
     runs-on: ubuntu-latest
     steps:
+      - name: Get develop branch label
+        run: |
+          DEVELOP_LABEL=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/labels" | \
+            jq -r '.[] | select(.name | startswith("develop-")) | .name')
+          echo "REQUIRED_LABEL=$DEVELOP_LABEL" >> $GITHUB_ENV
       - name: Check for required label
-        env:
-          REQUIRED_LABEL: "ready-for-review"
         run: |
           #!/bin/bash
           set -e
@@ -20,7 +26,7 @@ jobs:
 
           # Check if the required label is present
           if echo "$LABELS" | grep -q "^$REQUIRED_LABEL$"; then
-            echo "Required label '$REQUIRED_LABEL' is present."
+            echo "Required label '${{ vars.REQUIRED_LABEL }}' is present."
             exit 0
           else
             echo "Error: Required label '$REQUIRED_LABEL' is missing."
