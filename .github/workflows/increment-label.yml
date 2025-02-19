@@ -17,6 +17,8 @@ jobs:
         with:
           fetch-depth: 0
       - name: Update environment variable
+        env: 
+          OWNER: caesar1231
         run: |
           # Get the current REQUIRED_LABEL value
           CURRENT_VALUE=${{ vars.REQUIRED_LABEL }}
@@ -36,9 +38,11 @@ jobs:
           NEW_VALUE="R$NEW_NUMBER"
 
           # Update the REQUIRED_LABEL variable
-          curl -X PATCH -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
+          curl -L
+            -X PATCH -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
             -d "{\"name\":\"REQUIRED_LABEL\",\"value\":\"$NEW_VALUE\"}" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/variables/REQUIRED_LABEL"
+            "https://api.github.com/repos/${{ env.OWNER }}/${{ github.repository }}/actions/variables/REQUIRED_LABEL"
 
           echo "Environment variable REQUIRED_LABEL updated to $NEW_VALUE"
