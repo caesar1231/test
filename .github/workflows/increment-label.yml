@@ -9,7 +9,7 @@ on:
 
 jobs:
   if_merged:
-    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'develop')
+    if: github.event.pull_request.merged && startsWith(github.head_ref, 'develop')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
