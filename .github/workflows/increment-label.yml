@@ -37,13 +37,20 @@ jobs:
           # Create the new value
           NEW_VALUE="R$NEW_NUMBER"
 
+          curl -L \
+            -X DELETE \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/caesar1231/test/actions/variables/REQUIRED_LABEL
+
           # Update the REQUIRED_LABEL variable
           curl -L \
-            -X PATCH \
+            -X POST \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/caesar1231/test/actions/variables/REQUIRED_LABEL" \
+            "https://api.github.com/repos/caesar1231/test/actions/variables" \
             -d '{"name":"REQUIRED_LABEL","value":"$NEW_VALUE"}'
 
           echo "Environment variable REQUIRED_LABEL updated to $NEW_VALUE"
