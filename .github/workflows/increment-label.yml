@@ -1,31 +1,22 @@
 name: Update Environment Variable on Main Branch
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - main
 
 jobs:
-  update-env-var:
+  if_merged:
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'develop')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Check if merge is from develop
-        id: check-merge
-        run: |
-          LAST_COMMIT_MSG=$(git log -1 --pretty=%B)
-          if [[ $LAST_COMMIT_MSG == *"Merge pull request * develop"* ]]; then
-            echo "IS_DEVELOP_MERGE=true" >> $GITHUB_OUTPUT
-          else
-            echo "IS_DEVELOP_MERGE=false" >> $GITHUB_OUTPUT
-          fi
-
       - name: Update environment variable
-        if: steps.check-merge.outputs.IS_DEVELOP_MERGE == 'true'
         run: |
           # Get the current REQUIRED_LABEL value
           CURRENT_VALUE=${{ vars.REQUIRED_LABEL }}

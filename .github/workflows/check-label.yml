@@ -7,7 +7,8 @@ on:
       - develop
 
 jobs:
-  check-label:
+  run_if:
+    if: startsWith(github.head_ref, 'feature/')
     runs-on: ubuntu-latest
     steps:
       - name: Check for required label
