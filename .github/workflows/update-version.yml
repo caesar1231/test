@@ -27,7 +27,7 @@ jobs:
           LATEST_TAG=${LATEST_TAG#v}
           echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
 
-      - name: Generate tag for minor update
+      - name: Generate a tag for minor update
         if: startsWith(github.head_ref, 'develop')
         run: |
           # Split the latest tag into its components
@@ -42,7 +42,7 @@ jobs:
           # Output the new tag
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
-      - name: Generate tag for hotfix update
+      - name: Generate a tag for hotfix update
         if: startsWith(github.head_ref, 'hotfix')
         run: |
             # Split the latest tag into its components
