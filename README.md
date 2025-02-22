@@ -12,12 +12,12 @@ Personal access tokens を生成し、以下の権限を付与する
 以下のシークレット・環境変数をセットする
 
 シークレット
-- PAT
- 上記手順で生成したトークン
+
+- PAT: 上記手順で生成したトークン
 
 環境変数
-- RELEASE_LABEL
- 定期リリース番号（R23など）
+
+- RELEASE_LABEL: 定期リリース番号（R23など）
 
 ## ブランチ保護
 developとmainの削除をできないよう保護する
@@ -37,3 +37,4 @@ develop→mainへのPRで`major`を指定
 # 今後
 - 自動プルリク機能追加
 - develop rebaseプルリク追加
+- deployment/issueとの連携
