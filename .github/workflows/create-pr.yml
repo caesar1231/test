@@ -1,0 +1,16 @@
+name: Create a Pull Request on main merge
+
+on:
+  deployment
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get the latest release tag
+        run: |
+          echo "test"
