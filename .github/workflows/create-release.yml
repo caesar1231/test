@@ -1,4 +1,4 @@
-name: Update The Version and Set Tag
+name: Create a new release
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  update_version:
+  update-version:
     if: github.event.pull_request.merged
     runs-on: ubuntu-latest
     steps:
@@ -27,7 +27,7 @@ jobs:
           LATEST_TAG=${LATEST_TAG#v}
           echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
 
-      - name: Generate tag for minor update
+      - name: Generate a tag for minor update
         if: startsWith(github.head_ref, 'develop')
         run: |
           # Split the latest tag into its components
@@ -42,7 +42,7 @@ jobs:
           # Output the new tag
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
-      - name: Generate tag for hotfix update
+      - name: Generate a tag for hotfix update
         if: startsWith(github.head_ref, 'hotfix')
         run: |
             # Split the latest tag into its components
@@ -68,3 +68,8 @@ jobs:
             -d "{\"tag_name\":\"${{ env.NEW_TAG }}\"}"
           
           echo "Cretaed a new release: ${{ env.NEW_TAG }}"
+  
+      - name: Create a new pull request
+        run: |
+          
+

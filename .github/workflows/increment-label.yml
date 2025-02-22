@@ -1,4 +1,4 @@
-name: Update Environment Variable on Main Branch
+name: Increment the release label
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  increment_label:
+  increment-label:
     if: github.event.pull_request.merged && startsWith(github.head_ref, 'develop')
     runs-on: ubuntu-latest
     env:
@@ -38,7 +38,7 @@ jobs:
           # Create the new value
           NEW_VALUE="R$NEW_NUMBER"
           echo "NEW_VALUE=$NEW_VALUE" >> $GITHUB_ENV
-      - name: remove current label
+      - name: Remove the current label
         run: |
           curl -L \
             -X DELETE \
@@ -47,7 +47,7 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/${{ github.repository }}/labels/$RELEASE_LABEL
           echo "removed the current label"
-      - name: update the label
+      - name: Update the release label
         run: |
           curl -L \
             -X PATCH \
