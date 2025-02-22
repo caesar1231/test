@@ -7,11 +7,13 @@ on:
       - develop
 
 jobs:
-  run_if:
+  check-label:
     if: ${{ !startsWith(github.head_ref, 'hotfix/') }}
     runs-on: ubuntu-latest
     steps:
       - name: Check for required label
+        env:
+          RELEASE_LABEL: ${{ vars.RELEASE_LABEL }}
         run: |
           #!/bin/bash
           set -e
@@ -20,10 +22,10 @@ jobs:
           LABELS=$(jq -r '.pull_request.labels[].name' "$GITHUB_EVENT_PATH")
 
           # Check if the required label is present
-          if echo "$LABELS" | grep -q "${{ vars.REQUIRED_LABEL }}"; then
-            echo "Required label '${{ vars.REQUIRED_LABEL }}' is present."
+          if echo "$LABELS" | grep -q "$RELEASE_LABEL"; then
+            echo "Required label '$RELEASE_LABEL' is present."
             exit 0
           else
-            echo "Error: Required label '${{ vars.REQUIRED_LABEL }}' is missing."
+            echo "Error: Required label $RELEASE_LABEL is missing."
             exit 1
           fi
