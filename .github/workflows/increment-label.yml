@@ -12,6 +12,7 @@ jobs:
     if: github.event.pull_request.merged && startsWith(github.head_ref, 'develop')
     runs-on: ubuntu-latest
     env:
+      LABEL_NAME: RELEASE_LABEL
       RELEASE_LABEL: ${{ vars.RELEASE_LABEL }}
     steps:
       - name: Checkout repository
@@ -53,7 +54,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.PAT }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/${{ github.repository }}/actions/variables/REQUIRED_LABEL \
+            https://api.github.com/repos/${{ github.repository }}/actions/variables/$LABEL_NAME \
             -d "{\"name\":\"REQUIRED_LABEL\",\"value\":\"${{ env.NEW_VALUE }}\"}"
 
           echo "Environment variable REQUIRED_LABEL updated to ${{ env.NEW_VALUE }}"
