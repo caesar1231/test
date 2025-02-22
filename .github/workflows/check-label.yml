@@ -22,10 +22,8 @@ jobs:
           #!/bin/bash
           set -e
 
-          # Get all labels from the pull request
           LABELS=$(jq -r '.pull_request.labels[].name' "$GITHUB_EVENT_PATH")
 
-          # Check if the required label is present
           if echo "$LABELS" | grep -q "$RELEASE_LABEL"; then
             echo "Required label '$RELEASE_LABEL' is present."
             exit 0

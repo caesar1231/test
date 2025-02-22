@@ -30,7 +30,7 @@ jobs:
       - name: Generate a tag for new update
         if: startsWith(github.head_ref, 'develop')
         env:
-          MAJOR_LABEL: MAJOR
+          MAJOR_LABEL: major
         run: |
           IFS='.' read -r -a TAG_PARTS <<< "$LATEST_TAG"
           LABELS=$(jq -r '.pull_request.labels[].name' "$GITHUB_EVENT_PATH")
@@ -39,29 +39,19 @@ jobs:
             NEW_MAJOR=$((TAG_PARTS[0] + 1))
             NEW_TAG="$NEW_MAJOR.0.0"
           else
-            # Increment the minor version
             NEW_MINOR=$((TAG_PARTS[1] + 1))
-
-            # Construct the new tag
             NEW_TAG="${TAG_PARTS[0]}.$NEW_MINOR.0"
           fi
 
-          # Output the new tag
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Generate a tag for hotfix
         if: startsWith(github.head_ref, 'hotfix')
         run: |
-            # Split the latest tag into its components
             IFS='.' read -r -a TAG_PARTS <<< "$LATEST_TAG"
-
-            # Increment the patch version
             NEW_PATCH=$((TAG_PARTS[2] + 1))
-
-            # Construct the new tag
             NEW_TAG="${TAG_PARTS[0]}.${TAG_PARTS[1]}.$NEW_PATCH"
 
-            # Output the new tag
             echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
     
       - name: Create a new release
@@ -75,8 +65,3 @@ jobs:
             -d "{\"tag_name\":\"${{ env.NEW_TAG }}\"}"
           
           echo "Cretaed a new release: ${{ env.NEW_TAG }}"
-  
-      - name: Create a new pull request
-        run: |
-          
-
