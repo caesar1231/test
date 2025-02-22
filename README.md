@@ -22,6 +22,18 @@ Personal access tokens を生成し、以下の権限を付与する
 ## ブランチ保護
 developとmainの削除をできないよう保護する
 
+## タグ
+
+### developへのPR
+定期リリース番号を指定（R2など）
+
+### hotfix
+不要
+
+### メジャーアップデート
+develop→mainへのPRで`major`を指定
+
+
 # 今後
 - 自動プルリク機能追加
 - develop rebaseプルリク追加
