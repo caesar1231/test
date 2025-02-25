@@ -9,6 +9,8 @@ on:
       - synchronize
     branches:
       - develop
+    paths-ignore:
+      - '.gitignore'
 
 jobs:
   check-label:
